@@ -68,7 +68,7 @@ open class Workflow(payload: JsonObject) {
                         val archiveDownloadUrl = artifact.get("archive_download_url").asString
                         if (!archiveDownloadUrl.startsWith("https://api.github.com/repos/SeorawWorld")) {
                             SeorawCore.instance.logger.info("§c未经允许的来源: $archiveDownloadUrl")
-                            return
+                            return@use
                         }
                         SeorawCore.instance.logger.info("§c正在下载...")
                         response = client.get(archiveDownloadUrl) {
