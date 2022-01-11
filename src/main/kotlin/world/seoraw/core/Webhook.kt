@@ -52,6 +52,7 @@ open class Workflow(payload: JsonObject) {
 
     open fun checkUpdate() {
         if (repositoryOwner == "SeorawWorld" && (repositoryName == "SeorawPlugin" || repositoryName == "SeorawCore")) {
+            SeorawCore.instance.logger.info("§c$repositoryName 收到新的推送，正在获取详细信息。")
             Bukkit.getScheduler().runTaskAsynchronously(SeorawCore.instance, Runnable {
                 runBlocking {
                     HttpClient(CIO).use { client ->
@@ -61,12 +62,14 @@ open class Workflow(payload: JsonObject) {
                         val artifacts = JsonParser.parseString(response.receive<ByteArray>().decodeToString()).asJsonObject
                         val artifact = artifacts.getAsJsonArray("artifacts")[0].asJsonObject
                         val archiveDownloadUrl = artifact.get("archive_download_url").asString
+                        SeorawCore.instance.logger.info("§c正在下载...")
                         response = client.get(archiveDownloadUrl) {
                             headers["Authorization"] = "token ${SeorawCore.instance.conf.getString("github-token")}"
                         }
                         val file = newFile("plugins/update/${UUID.randomUUID()}.zip")
                         try {
                             file.writeBytes(response.readBytes())
+                            SeorawCore.instance.logger.info("§c下载完成，开始部署。")
                             val unzipFile = newFile("plugins/update/${UUID.randomUUID()}", folder = true)
                             file.unzip(unzipFile)
                             val listFiles = unzipFile.listFiles()

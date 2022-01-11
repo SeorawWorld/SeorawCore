@@ -1,3 +1,11 @@
 name: SeorawCore
 main: world.seoraw.core.SeorawCore
 version: 1.0.0
+libraries:
+  - io.ktor:ktor-server-core:1.6.7
+  - io.ktor:ktor-server-netty:1.6.7
+  - io.ktor:ktor-client-core:1.6.7
+  - io.ktor:ktor-client-core-jvm:1.6.7
+  - io.ktor:ktor-client-cio:1.6.7
+  - io.ktor:ktor-client-cio-jvm:1.6.7
+  - org.jetbrains.kotlin:kotlin-stdlib:1.5.10
