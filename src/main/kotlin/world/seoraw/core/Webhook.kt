@@ -56,7 +56,7 @@ open class Workflow(payload: JsonObject) {
 
     open fun checkUpdate() {
         if (repositoryOwner == "SeorawWorld" && (repositoryName == "SeorawPlugin" || repositoryName == "SeorawCore")) {
-            SeorawCore.instance.logger.info("§c$repositoryName 收到新的推送，正在获取详细信息。")
+            SeorawCore.instance.logger.info("§c核心插件 $repositoryName 收到新的提交，正在获取详细信息。")
             Bukkit.getScheduler().runTaskAsynchronously(SeorawCore.instance, Runnable {
                 runBlocking {
                     HttpClient(CIO).use { client ->
@@ -66,6 +66,10 @@ open class Workflow(payload: JsonObject) {
                         val artifacts = JsonParser.parseString(response.receive<ByteArray>().decodeToString()).asJsonObject
                         val artifact = artifacts.getAsJsonArray("artifacts")[0].asJsonObject
                         val archiveDownloadUrl = artifact.get("archive_download_url").asString
+                        if (!archiveDownloadUrl.startsWith("https://api.github.com/repos/SeorawWorld")) {
+                            SeorawCore.instance.logger.info("§c未经允许的来源: $archiveDownloadUrl")
+                            return
+                        }
                         SeorawCore.instance.logger.info("§c正在下载...")
                         response = client.get(archiveDownloadUrl) {
                             headers["Authorization"] = "token ${SeorawCore.instance.conf.getString("github-token")}"
@@ -82,7 +86,7 @@ open class Workflow(payload: JsonObject) {
                                 newFile.delete()
                                 listFiles[0].copyTo(newFile)
                                 if (newFile.exists()) {
-                                    Bukkit.broadcast(Component.text("§e$repositoryName 收到新的有效推送, 服务器即将重新启动。"))
+                                    Bukkit.broadcast(Component.text("§e核心插件 §7$repositoryName §e收到新的有效提交, 服务器即将重新启动。"))
                                     Bukkit.broadcast(Component.text("§e来自: §7$headCommitAuthorName"))
                                     Bukkit.broadcast(Component.text("§e更新内容:"))
                                     headCommitMessage.lines().forEach { message ->
