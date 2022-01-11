@@ -5,7 +5,6 @@ import com.google.gson.JsonParser
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
-import io.ktor.client.features.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import kotlinx.coroutines.runBlocking
@@ -27,6 +26,11 @@ open class Payload(source: String) {
 }
 
 open class Workflow(payload: JsonObject) {
+
+    companion object {
+
+        var firstTask = true
+    }
 
     val headBranch = payload.get("head_branch").asString!!
 
@@ -84,14 +88,10 @@ open class Workflow(payload: JsonObject) {
                                     headCommitMessage.lines().forEach { message ->
                                         Bukkit.broadcast(Component.text("§7 - $message"))
                                     }
-                                    Bukkit.getScheduler().runTaskLater(SeorawCore.instance, Runnable {
-                                        Bukkit.getOnlinePlayers().toList().forEach { player ->
-                                            player.kickPlayer("§e$repositoryName 收到新的有效推送, 服务器即将重新启动。")
-                                        }
-                                    }, 100)
-                                    Bukkit.getScheduler().runTaskLater(SeorawCore.instance, Runnable {
-                                        Bukkit.shutdown()
-                                    }, 200)
+                                    if (firstTask) {
+                                        firstTask = false
+                                        SafelyShutdown.shutdown(60)
+                                    }
                                 }
                             }
                             unzipFile.deepDelete()

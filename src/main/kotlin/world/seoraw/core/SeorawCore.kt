@@ -21,8 +21,8 @@ class SeorawCore : JavaPlugin() {
     }
 
     override fun onEnable() {
+        initListeners()
         logger.info("SeorawCore 已就绪")
-        server.pluginManager.registerEvents(SeorawGame, this)
         server.scheduler.runTaskAsynchronously(this, Runnable {
             logger.info("GitHub WebHook listen on *:${conf.getInt("listen")}")
             embeddedServer(Netty, port = conf.getInt("listen"), host = "0.0.0.0") { configureRouting() }.start(wait = true)
@@ -38,6 +38,11 @@ class SeorawCore : JavaPlugin() {
             saveResource("conf.yml", true)
             initConf()
         }
+    }
+
+    fun initListeners() {
+        server.pluginManager.registerEvents(SeorawGame, this)
+        server.pluginManager.registerEvents(SafelyShutdown, this)
     }
 
     companion object {
