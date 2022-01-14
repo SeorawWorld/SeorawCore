@@ -27,6 +27,7 @@ object SafelyShutdown : Listener {
                     SeorawCore.instance.logger.info("$delay")
                     Bukkit.getOnlinePlayers().filter { it !in bar.players }.forEach { bar.addPlayer(it) }
                 } else {
+                    Bukkit.getOnlinePlayers().toList().forEach { it.kickPlayer("重新启动") }
                     Bukkit.shutdown()
                     cancel()
                 }
