@@ -15,6 +15,7 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT")
+    compileOnly("io.ktor:ktor-html-builder:$ktor_version")
     compileOnly("io.ktor:ktor-server-core:$ktor_version")
     compileOnly("io.ktor:ktor-server-netty:$ktor_version")
     compileOnly("io.ktor:ktor-client-core:$ktor_version")
