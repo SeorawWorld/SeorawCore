@@ -92,7 +92,9 @@ open class Workflow(payload: JsonObject) {
                                     headCommitMessage.lines().forEach { message ->
                                         Bukkit.broadcast(Component.text("§7 - $message"))
                                     }
-                                    if (firstTask) {
+                                    if (Bukkit.getOnlinePlayers().isEmpty()) {
+                                        Bukkit.shutdown()
+                                    } else if (firstTask) {
                                         firstTask = false
                                         SafelyShutdown.shutdown(60)
                                     }
