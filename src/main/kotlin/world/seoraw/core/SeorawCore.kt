@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
+import java.time.LocalDateTime
 
 class SeorawCore : JavaPlugin() {
 
@@ -27,6 +28,12 @@ class SeorawCore : JavaPlugin() {
             logger.info("GitHub WebHook listen on *:${conf.getInt("listen")}")
             embeddedServer(Netty, port = conf.getInt("listen"), host = "0.0.0.0") { configureRouting() }.start(wait = true)
         })
+        server.scheduler.runTaskTimerAsynchronously(this, Runnable {
+            val now = LocalDateTime.now()
+            if (now.hour == 4 && now.minute == 0 && now.second in 0..5) {
+                SafelyShutdown.shutdown(60)
+            }
+        }, 20, 20)
     }
 
     fun initConf() {
