@@ -9,14 +9,23 @@ import org.bukkit.event.server.ServerCommandEvent
 
 object SeorawGame : Listener {
 
+    val whitelistCommands = arrayOf(
+        "stop",
+        "paper",
+        "chunky",
+        "say"
+    )
+
     init {
         Bukkit.getOperators().forEach { it.isOp = false }
     }
 
     @EventHandler
     fun e(e: ServerCommandEvent) {
-        e.isCancelled = true
-        e.sender.sendMessage("§c无法在控制台运行命令: ${e.command}")
+        if (whitelistCommands.none { e.command.startsWith(it) }) {
+            e.isCancelled = true
+            e.sender.sendMessage("§c无法在控制台运行命令: ${e.command}")
+        }
     }
 
     @EventHandler
