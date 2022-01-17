@@ -15,6 +15,7 @@ object SeorawGame : Listener {
         "chunky",
         "say",
         "tps",
+        "timings"
     )
 
     init {
