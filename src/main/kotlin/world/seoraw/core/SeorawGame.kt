@@ -12,7 +12,6 @@ object SeorawGame : Listener {
     val whitelistCommands = arrayOf(
         "stop",
         "paper",
-        "chunky",
         "say",
         "tps",
         "timings"

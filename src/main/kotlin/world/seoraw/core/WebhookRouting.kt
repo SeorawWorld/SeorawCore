@@ -69,6 +69,9 @@ fun Application.configureRouting() {
         }
         get("/") {
             call.respondJson {
+                add("server", JsonObject().also {
+                    it.addProperty("tps", Bukkit.getTPS()[0])
+                })
                 add("players", JsonArray().also {
                     Bukkit.getOnlinePlayers().forEach { player ->
                         it.add(JsonObject().also { p ->
