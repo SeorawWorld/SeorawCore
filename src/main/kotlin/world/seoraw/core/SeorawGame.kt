@@ -13,7 +13,8 @@ object SeorawGame : Listener {
         "stop",
         "paper",
         "chunky",
-        "say"
+        "say",
+        "tps",
     )
 
     init {
